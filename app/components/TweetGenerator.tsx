@@ -12,14 +12,15 @@ const TweetGenerator = () => {
   const [error, setError] = useState('');
   const [generatedTweet, setGeneratedTweet] = useState('');
   const [disableSubmitButton, setDisableSubmitButton] = useState(true);
-  console.log('disableSubmitButton:', disableSubmitButton);
 
   const { handleInputChange, handleSubmit } = useChat({
     api: '/api/gpt',
     onFinish: (message) => {
       setError('');
 
-      const generatedTweetContent = message.content;
+      let generatedTweetContent = message.content;
+      // Remove hashtags from the generated tweet
+      generatedTweetContent = generatedTweetContent?.replace(/#[\w]+/g, '');
       setGeneratedTweet(generatedTweetContent);
       
       if (generateImage && generatedTweetContent) {
@@ -81,7 +82,7 @@ const TweetGenerator = () => {
               ...e,
               target: {
                 ...e.target,
-                value: `Generate a ${tone} tweet about ${e.target.value}.`}
+                value: `Generate a ${tone} post about ${e.target.value}.`}
               }
             );
             setDisableSubmitButton(false);
@@ -100,7 +101,7 @@ const TweetGenerator = () => {
               ...event,
               target: {
                 ...event.target,
-                value: `Generate a ${e.target.value} tweet about ${tweetText}.`
+                value: `Generate a ${e.target.value} post about ${tweetText}.`
               }
             });
             setDisableSubmitButton(false);
