@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import "@fortawesome/fontawesome-svg-core/styles.css";
+import { Analytics } from '@vercel/analytics/react';
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
@@ -16,7 +17,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   )
 }
