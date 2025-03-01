@@ -80,7 +80,7 @@ const TweetGenerator = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1>Generate your next Tweet using AI</h1>
+        <h1>Generate your next Motivational Tweet using AI</h1>
         <p>Tweets generated: {generationCount}</p>
       </div>
       <form className={styles.form} onSubmit={onSubmit}>
@@ -89,7 +89,7 @@ const TweetGenerator = () => {
           id="bioInput"
           className={styles.textarea}
           rows={4}
-          placeholder="An announcement for our new product: Leetcode Torture"
+          placeholder="An announcement for our new product: Gen Z Translator"
           value={tweetText}
           onChange={(e) => {
             setTweetText(e.target.value);
