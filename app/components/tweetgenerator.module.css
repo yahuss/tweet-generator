@@ -83,3 +83,17 @@
 .button:hover {
   background-color: #2769d8;
 }
+
+.historySection {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.historyItem {
+  padding: 15px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 10px;
+}

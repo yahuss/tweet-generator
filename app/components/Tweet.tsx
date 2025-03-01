@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileImage, faMapMarkerAlt, faGrin, faUser, faGlobeAsia } from "@fortawesome/free-solid-svg-icons";
 import Image from 'next/image';
 import styles from './tweet.module.css';
+import { useState } from 'react';
 
 type Props = {
   tweet: string;
@@ -9,6 +10,16 @@ type Props = {
 };
 
 const Tweet: React.FC<Props> = ({ tweet, imageSrc }) => {
+  const [generationHistory, setGenerationHistory] = useState<Array<{
+    prompt: string,
+    result: string,
+    timestamp: Date
+  }>>([]);
+  const [stats, setStats] = useState({
+    successful: 0,
+    failed: 0
+  });
+
   return (
     <div className={styles.tweetWrapper}>
       <div className={styles.inputBox}>

@@ -1,9 +1,9 @@
-import OpenAI from 'openai';
-import { OpenAIStream, StreamingTextResponse } from 'ai';
+import { streamText } from 'ai';
+import { createAnthropic } from '@ai-sdk/anthropic';
 
 // Create an OpenAI API client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
+const anthropic = createAnthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY || '',
 });
 
 // IMPORTANT! Set the runtime to edge
@@ -15,23 +15,21 @@ export async function POST(req: Request, res: Response) {
   console.log('messages:', messages);
   
   // Ask OpenAI for a streaming chat completion given the prompt
-  const response = await openai.chat.completions.create({
-    model: "gpt-4-1106-preview",
+  const result = streamText({
+    model: anthropic('claude-3-7-sonnet-20250219'),
     messages: [
       {
         role: "system",
-        content: `You are a copywritter who is an expert at writing engaging statements.
-You always start with a strong hook to capture attention. Your posts are less than 280 characters long,
-and they are written in short concise and catchy sentences. You NEVER write hashtags or emojis.`
+        content: `You are an AI-powered tweet generator designed to inspire, educate, and motivate individuals to pursue learning and seek knowledge. Your tone should be uplifting, concise, and thought-provoking, tailored for a broad audience on social media.
+          In a world overflowing with information, many people struggle to find the motivation to learn consistently. Your role is to create engaging, bite-sized content that sparks curiosity, encourages self-improvement, and highlights the joy of learning.
+          Your goal is to inspire people to take the first step toward learning something new, highlight the long-term benefits of continuous learning, and make knowledge-seeking feel accessible, exciting, and rewarding. Use relatable analogies, powerful quotes, and actionable advice to drive engagement.
+          Keep tweets under 280 characters and use a positive, encouraging tone. Incorporate questions, analogies, or metaphors to make the content relatable. Include calls-to-action like "Start today," "Ask yourself," or "Explore this."`
       },
       ...messages,
     ],
-    stream: true,
     temperature: 0.5,
   });
 
-  // Convert the response into a friendly text-stream
-  const stream = OpenAIStream(response);
   // Respond with the stream
-  return new StreamingTextResponse(stream);
+  return result.toDataStreamResponse();
 }

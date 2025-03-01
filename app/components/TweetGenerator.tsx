@@ -12,16 +12,30 @@ const TweetGenerator = () => {
   const [error, setError] = useState('');
   const [generatedTweet, setGeneratedTweet] = useState('');
   const [disableSubmitButton, setDisableSubmitButton] = useState(true);
+  const [generationCount, setGenerationCount] = useState(0);
+  const [generationHistory, setGenerationHistory] = useState<Array<{
+    prompt: string,
+    result: string,
+    timestamp: Date
+  }>>([]);
 
   const { handleInputChange, handleSubmit } = useChat({
     api: '/api/gpt',
     onFinish: (message) => {
       setError('');
+      setGenerationCount(prevCount => prevCount + 1);
 
       let generatedTweetContent = message.content;
       // Remove hashtags from the generated tweet
       generatedTweetContent = generatedTweetContent?.replace(/#[\w]+/g, '');
       setGeneratedTweet(generatedTweetContent);
+      
+      // Add this new section to store the generation in history
+      setGenerationHistory(prevHistory => [...prevHistory, {
+        prompt: tweetText,
+        result: generatedTweetContent,
+        timestamp: new Date()
+      }]);
       
       if (generateImage && generatedTweetContent) {
         getImageData(generatedTweetContent).then();
@@ -67,6 +81,7 @@ const TweetGenerator = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>Generate your next Tweet using AI</h1>
+        <p>Tweets generated: {generationCount}</p>
       </div>
       <form className={styles.form} onSubmit={onSubmit}>
         <label htmlFor="bioInput" className={styles.label}>1. Write the topic you want to tweet about.</label>
@@ -77,14 +92,14 @@ const TweetGenerator = () => {
           placeholder="An announcement for our new product: Leetcode Torture"
           value={tweetText}
           onChange={(e) => {
-            setTweetText(e.target.value)
+            setTweetText(e.target.value);
             handleInputChange({
               ...e,
               target: {
                 ...e.target,
-                value: `Generate a ${tone} post about ${e.target.value}.`}
+                value: `Generate a ${tone} post about ${e.target.value}`
               }
-            );
+            });
             setDisableSubmitButton(false);
           }}
           disabled={loading}
@@ -132,6 +147,18 @@ const TweetGenerator = () => {
       {loading && <p>Loading...</p>}
       {error && <p className={styles.error}>{error}</p>}
       {generatedTweet && <Tweet tweet={generatedTweet} imageSrc={imageUrl} />}
+      
+      {generationHistory.length > 0 && (
+        <div className={styles.historySection}>
+          <h2>Generation History</h2>
+          {generationHistory.map((entry, index) => (
+            <div key={index} className={styles.historyItem}>
+              <p><strong>Prompt:</strong> {entry.prompt}</p>
+              <p><strong>Result:</strong> {entry.result}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
