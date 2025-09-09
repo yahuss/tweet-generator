@@ -1,6 +1,6 @@
-# Codebender Tweet Generator
+# Tweet Generator
 
-This app generates engaging tweets for your brand.
+This app generates motivational tweets that sparks your curiosity and inspires you to learn.
 
 This project is built using Nextjs. It utilizes the Claude 3.7 for chat completion, and Dall-E for image generation.
 
